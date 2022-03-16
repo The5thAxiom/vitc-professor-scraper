@@ -1,0 +1,67 @@
+import scrapy
+
+class ProfSpider(scrapy.Spider):
+    name = "get_professor_links"
+
+    def start_requests(self):
+        urls = [
+            'https://chennai.vit.ac.in/computer-science-engineering-chennai/faculty/'
+        ]
+        for url in urls:
+            yield scrapy.Request(url = url, callback = self.parse)
+
+    def parse(self, response):
+        file = open('links.txt', "a")
+        profs = []
+        for text in response.css("h3.item-title a.main-color-1-hover::attr(href)"):
+            profs.append(text.get())
+        for prof in profs:
+            print(prof)
+            file.write(prof)
+            file.write("\n")
+
+class IndividualSpider(scrapy.Spider):
+    name = "get_professor_info"
+
+    def start_requests(self):
+        links = open('links.txt', "r")
+        urls = [link for link in links.readlines()]
+        file = open("profs.txt", "w")
+        file.write("")
+        for url in urls:
+            yield scrapy.Request(url = url, callback = self.parse)
+
+    def parse(self, response):
+        p = response.css("div#content div.pure-content p")
+        prof = {
+            "name": response.css("div#content h3.item-title::text").get(),
+            "designation": response.css("div#content h4.small-text::text").get(),
+            "email": p[1].get()
+                .replace('<p><strong>Email: </strong>', '')
+                .replace('<p><strong>Email:</strong>', '')
+                .replace('</p>', ''),
+            "PhD": p[2].get()
+                .replace('<p><strong>PhD: </strong>', '')
+                .replace('<p><strong>PhD:</strong>', '')
+                .replace('</p>', '')
+                .lstrip(),
+            "Research Area": p[3].get()
+                .replace('<p><strong>Research Area: </strong>', '')
+                .replace('<p><strong>Research Area:</strong>', '')
+                .replace('</p>', '')
+                .lstrip()
+        }
+        print(prof)
+        file = open("profs.txt", 'a')
+        file.write("\n")
+        file.write(prof["name"])
+        file.write("\n")
+        file.write(prof["designation"])
+        file.write("\n")
+        file.write(prof["email"])
+        file.write("\n")
+        file.write(prof["PhD"])
+        file.write("\n")
+        file.write(prof["Research Area"])
+        file.write("\n")
+        file.write("\n")
