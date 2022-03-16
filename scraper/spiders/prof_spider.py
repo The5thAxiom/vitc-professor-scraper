@@ -1,4 +1,6 @@
+from xmlrpc.client import ResponseError
 import scrapy
+import json
 
 class ProfSpider(scrapy.Spider):
     name = "get_professor_links"
@@ -27,7 +29,7 @@ class IndividualSpider(scrapy.Spider):
         links = open('links.txt', "r")
         urls = [link for link in links.readlines()]
         file = open("profs.txt", "w")
-        file.write("")
+        file.write("[")
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
 
@@ -35,6 +37,7 @@ class IndividualSpider(scrapy.Spider):
         p = response.css("div#content div.pure-content p")
         prof = {
             "name": response.css("div#content h3.item-title::text").get(),
+            "img": response.css("div#content article.single-event-content img::attr(src)")[1].extract(),
             "designation": response.css("div#content h4.small-text::text").get(),
             "email": p[1].get()
                 .replace('<p><strong>Email: </strong>', '')
@@ -51,17 +54,6 @@ class IndividualSpider(scrapy.Spider):
                 .replace('</p>', '')
                 .lstrip()
         }
-        print(prof)
+        print(json.dumps(prof, indent = 4))
         file = open("profs.txt", 'a')
-        file.write("\n")
-        file.write(prof["name"])
-        file.write("\n")
-        file.write(prof["designation"])
-        file.write("\n")
-        file.write(prof["email"])
-        file.write("\n")
-        file.write(prof["PhD"])
-        file.write("\n")
-        file.write(prof["Research Area"])
-        file.write("\n")
-        file.write("\n")
+        file.write(json.dumps(prof, indent = 4) + ",\n")
