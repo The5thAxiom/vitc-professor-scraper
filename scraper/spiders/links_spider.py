@@ -22,11 +22,8 @@ class ProfSpider(scrapy.Spider):
             yield scrapy.Request(url = url, callback = self.parse)
 
     def parse(self, response):
+        links = [text.get() for text in response.css("h3.item-title a.main-color-1-hover::attr(href)")]
         file = open('links.txt', "a")
-        profs = []
-        for text in response.css("h3.item-title a.main-color-1-hover::attr(href)"):
-            profs.append(text.get())
-        for prof in profs:
-            print(prof)
-            file.write(prof)
-            file.write("\n")
+        for link in links:
+            print(link)
+            file.write(link + "\n")

@@ -6,3 +6,4 @@ links:
 
 info:
 	scrapy crawl get_professor_info
+	python makeValidJson.py
