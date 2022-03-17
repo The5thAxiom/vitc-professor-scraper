@@ -1,5 +1,5 @@
 clear:
-	rm links.txt && rm profs.txt
+	rm links.txt && rm info.txt
 
 links:
 	scrapy crawl get_professor_links

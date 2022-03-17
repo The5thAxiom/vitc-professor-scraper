@@ -13,7 +13,8 @@ class ProfSpider(scrapy.Spider):
             'https://chennai.vit.ac.in/electrical-and-electronics-engineering-chennai/faculty/',
             'https://chennai.vit.ac.in/academics/schools/sas/mfaculty',
             'https://chennai.vit.ac.in/academics/schools/sas/pfaculty',
-            'https://chennai.vit.ac.in/academics/schools/sas/pfaculty'
+            'https://chennai.vit.ac.in/academics/schools/sas/pfaculty',
+            'https://chennai.vit.ac.in/academics/schools/ssl/faculty/'
         ]
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
@@ -34,14 +35,14 @@ class IndividualSpider(scrapy.Spider):
     def start_requests(self):
         links = open('links.txt', "r")
         urls = [link for link in links.readlines()]
-        file = open("profs.txt", "w")
+        file = open("info.txt", "w")
         file.write("[")
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
 
     def parse(self, response):
         p = response.css("div#content div.pure-content p")
-        if (len(p) == 4):
+        if len(p) == 4:
             prof = {
                 "name": response.css("div#content h3.item-title::text").get(),
                 "img": response.css("div#content article.single-event-content img::attr(src)")[1].extract(),
@@ -66,10 +67,10 @@ class IndividualSpider(scrapy.Spider):
                 "name": response.css("div#content h3.item-title::text").get(),
                 "img": response.css("div#content article.single-event-content img::attr(src)")[1].extract(),
                 "designation": response.css("div#content h4.small-text::text").get(),
-                "email": '',
-                "PhD": '',
-                "Research Area": ''
+                "email": None,
+                "PhD": None,
+                "Research Area": None
             }
-        print(prof)
-        file = open("profs.txt", 'a')
+        print(json.dumps(prof, indent = 4) + ",\n")
+        file = open("info.txt", 'a')
         file.write(json.dumps(prof, indent = 4) + ",\n")
