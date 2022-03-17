@@ -1,5 +1,5 @@
 # vitc-professor-scraper
-A simple web scraper to get information about SCOPE faculty members of VIT, Chennai
+A simple web scraper to get information about faculty members of VIT, Chennai
 
 # How to use
 - `make clear`: Clear previously generated links and information
