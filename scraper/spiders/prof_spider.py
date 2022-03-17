@@ -7,7 +7,9 @@ class ProfSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            'https://chennai.vit.ac.in/computer-science-engineering-chennai/faculty/'
+            'https://chennai.vit.ac.in/computer-science-engineering-chennai/faculty/',
+            'https://chennai.vit.ac.in/academics/schools/sense/faculty/'
+
         ]
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
