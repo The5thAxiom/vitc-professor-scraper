@@ -6,6 +6,8 @@ class ProfSpider(scrapy.Spider):
     name = "get_professor_links"
 
     def start_requests(self):
+        file = open('links.txt', "w")
+        file.write("")
         urls = [
             'https://chennai.vit.ac.in/computer-science-engineering-chennai/faculty/',
             'https://chennai.vit.ac.in/academics/schools/sense/faculty/',
