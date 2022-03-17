@@ -8,6 +8,7 @@ class ProfSpider(scrapy.Spider):
     def start_requests(self):
         file = open('links.txt', "w")
         file.write("")
+        file.close()
         urls = [
             'https://chennai.vit.ac.in/computer-science-engineering-chennai/faculty/',
             'https://chennai.vit.ac.in/academics/schools/sense/faculty/',
@@ -27,3 +28,4 @@ class ProfSpider(scrapy.Spider):
         for link in links:
             print(link)
             file.write(link + "\n")
+        file.close()

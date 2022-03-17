@@ -10,6 +10,7 @@ class IndividualSpider(scrapy.Spider):
         urls = [link for link in links.readlines()]
         file = open("info.txt", "w")
         file.write("")
+        file.close()
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
 
@@ -63,3 +64,4 @@ class IndividualSpider(scrapy.Spider):
         print(infoJson + ",\n")
         file = open("info.txt", 'a')
         file.write(infoJson + "\n")
+        file.close()
